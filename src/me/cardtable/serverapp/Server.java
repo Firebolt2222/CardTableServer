@@ -1,6 +1,7 @@
 package me.cardtable.serverapp;
 
 import me.cardtable.serverapp.connectionHandling.Clients;
+import me.cardtable.serverapp.connectionHandling.Message;
 import me.cardtable.serverapp.connectionHandling.messageThreads.MessageReceiveThread;
 import me.cardtable.serverapp.connectionHandling.messageThreads.MessageSendThread;
 
@@ -24,18 +25,20 @@ public class Server{
         }
         while(ServerOn){
             try{
-                Socket client =server.accept();
-                MessageSendThread mst=new MessageSendThread(client);
-                MessageReceiveThread mrt=new MessageReceiveThread(client);
-                Clients.addClient(client,mrt,mst);
+                Socket clientSocket =server.accept();
+                MessageReceiveThread mrt=new MessageReceiveThread(clientSocket);
+                MessageSendThread mst=new MessageSendThread(clientSocket);
+                Client client=new Client(clientSocket,mst,mrt);
+                Clients.addClient(client);
                 mst.start();
                 mrt.start();
+                client.sendMessage(new Message(new byte[]{0,4,2,20}));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         try{
-            for(Socket client:Clients.getClients()){
+            for(Client client:Clients.getClients()){
                 Clients.removeClient(client);
             }
             server.close();

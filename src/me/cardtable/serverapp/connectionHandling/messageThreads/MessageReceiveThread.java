@@ -4,6 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MessageReceiveThread extends Thread {
 
@@ -24,12 +27,15 @@ public class MessageReceiveThread extends Thread {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println(dataInputStream.readUTF());
+                System.out.println("Received "+Arrays.toString(dataInputStream.readAllBytes()));
 
             }
             dataInputStream.close();
             dataOutputStream.close();
-        }catch (IOException e){
+        }catch (SocketException se){
+            System.err.println("The client is not reachable!");
+        }
+        catch (IOException e){
             e.printStackTrace();
         }
         super.run();
