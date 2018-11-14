@@ -1,12 +1,12 @@
 package me.cardtable.serverapp.connectionHandling.messageThreads;
 
+import me.cardtable.serverapp.connectionHandling.Message;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MessageReceiveThread extends Thread {
 
@@ -22,13 +22,13 @@ public class MessageReceiveThread extends Thread {
             DataOutputStream dataOutputStream = new DataOutputStream(client.getOutputStream());
             DataInputStream dataInputStream = new DataInputStream(client.getInputStream());
             while(!interrupted()){
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                byte[] buffer=new byte[4];
+                int read=0;
+                while((read=dataInputStream.read(buffer,0,buffer.length))!=-1){
+                    System.out.println("Received:");
+                    Message msg=new Message(buffer);
+                    msg.readMessage();
                 }
-                System.out.println("Received "+Arrays.toString(dataInputStream.readAllBytes()));
-
             }
             dataInputStream.close();
             dataOutputStream.close();

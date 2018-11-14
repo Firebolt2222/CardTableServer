@@ -13,7 +13,7 @@ import java.util.Random;
 public class MessageSendThread extends Thread {
 
     Socket client;
-    Message message=null;
+    Message msg=null;
 
 
     public MessageSendThread(Socket client) {
@@ -33,11 +33,11 @@ public class MessageSendThread extends Thread {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if(message!=null){
-                    dataOutputStream.write(message.message);
+                if(msg!=null){
+                    dataOutputStream.write(msg.message);
                     System.out.println("Sending:");
-                    message.readMessage();
-                    message=null;
+                    msg.readMessage();
+                    msg=null;
                 }
             }
             dataInputStream.close();
@@ -51,7 +51,7 @@ public class MessageSendThread extends Thread {
         super.run();
     }
 
-    public void setMessage(Message message) {
-        this.message = message;
+    public void setMessage(Message msg) {
+        this.msg=msg;
     }
 }

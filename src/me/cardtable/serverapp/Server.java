@@ -32,7 +32,6 @@ public class Server{
                 Clients.addClient(client);
                 mst.start();
                 mrt.start();
-                client.sendMessage(new Message(new byte[]{0,4,2,20}));
             } catch (IOException e) {
                 e.printStackTrace();
             }
